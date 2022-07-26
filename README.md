@@ -63,11 +63,29 @@ developing your own process.
 - Add a new toy when the toy form is submitted
 
   - How I debugged:
+  1. Using the new toy form, add a New Toy using the form
+  2. Inspect the network tab to monitor the response from the post request
+  3. Returns status code of 500 => internal error => check Rails console log
+  4. NameError (uninitialized constant ToysController::Toys)
+  5. Typo made in class definition needs to be changed
 
 - Update the number of likes for a toy
 
   - How I debugged:
+  1. Add a like to the toy, monitor network tab for response
+  2. Liking crashes the application, error given by React: Unexpected end of JSON input
+  3. Check rails console log => 'Unpermitted parameter: :id'
+  4. We want to accesss the ID, however we want to keep this outside of the permitted parameters function.
+  5. Add a private method 'find_toy' that will lookup a toy by id so we can edit it, as well as adding a rescue method for an invalid lookup should that arise, so that we can keep conventions DRY
+  6. Rescue method will render a json error: item not found response
+  7. Response also needs to be rendered as JSON
 
 - Donate a toy to Goodwill (and delete it from our database)
 
   - How I debugged:
+  1. Hit 'Donate to Goodwill' button
+  2. Check Network tab, 404 response (not found)
+  3. Check exception in response => No route matches [DELETE] /toys/10
+  4. Check if controller route is defined in config/routes.rb
+  5. Add 'destroy' to resources 
+  6. Fix params[:id] to find_toy method for DRY conventions
